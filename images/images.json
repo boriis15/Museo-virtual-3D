@@ -1,0 +1,124 @@
+{
+  "images": [
+    {
+      "file": "1.png",
+      "title": "1",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 0
+    },
+    {
+      "file": "2.png",
+      "title": "2",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 1
+    },
+    {
+      "file": "3.png",
+      "title": "3",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 2
+    },
+    {
+      "file": "4.png",
+      "title": "4",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 3
+    },
+    {
+      "file": "5.png",
+      "title": "5",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 4
+    },
+    {
+      "file": "ArtGallery.png",
+      "title": "ArtGallery",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 5
+    },
+    {
+      "file": "Feliz cumpleaños Mi Lau.png",
+      "title": "Feliz cumpleaños Mi Lau",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 6
+    },
+    {
+      "file": "Mapa.png",
+      "title": "Mapa",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 7
+    },
+    {
+      "file": "pastel.png",
+      "title": "pastel",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 8
+    },
+    {
+      "file": "teclas (1).jpg",
+      "title": "teclas (1)",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 9
+    },
+    {
+      "file": "Teclas 2.png",
+      "title": "Teclas 2",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 10
+    },
+    {
+      "file": "WhatsApp Image 2026-09-24 at 9.32.33 PM.jpeg",
+      "title": "WhatsApp Image 2026-09-24 at 9.32.33 PM",
+      "date": "local",
+      "placeOfOrigin": "local",
+      "source": "local",
+      "width": 1,
+      "height": 1,
+      "image_id": 11
+    }
+  ]
+}
