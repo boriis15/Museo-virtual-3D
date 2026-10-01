@@ -6,14 +6,16 @@ const featuredOrder = [
     "Feliz cumpleaños Mi Lau.png", "pastel.png"
 ];
 const mainWallNumbers = [56, 57, 85, 87];
+const lobbyWallNumbers = [2, 3, 60, 16, 17, 74];
 const roomOrder = (image) => {
     const featuredIndex = featuredOrder.indexOf(image.file);
     if (featuredIndex >= 0) return featuredIndex < 3 ? 0 : 1;
 
     const match = /^imagen (\d+)$/i.exec(image.title);
     const imageNumber = match ? Number(match[1]) : null;
-    if (imageNumber === null || imageNumber === 1) return 1;
-    if (mainWallNumbers.includes(imageNumber)) return 1;
+    if (imageNumber === null) return 1;
+    if (imageNumber === 1) return 7;
+    if (mainWallNumbers.includes(imageNumber) || lobbyWallNumbers.includes(imageNumber)) return 1;
     if (imageNumber <= 15) return 2;
     if (imageNumber <= 29) return 3;
     if (imageNumber <= 43) return 4;
@@ -21,7 +23,7 @@ const roomOrder = (image) => {
     if (imageNumber <= 73) return 6;
     return 7;
 };
-const placementStarts = [0, 8, 9, 23, 37, 51, 65, 79];
+const placementStarts = [0, 14, 14, 26, 38, 52, 66, 79];
 const roomPlacementCounts = Array(placementStarts.length).fill(0);
 const images = require("../images/images.json").images
     .slice()
@@ -47,6 +49,13 @@ const images = require("../images/images.json").images
             if (bWallOrder === -1) return -1;
             return aWallOrder - bWallOrder;
         }
+        const aLobbyWallOrder = lobbyWallNumbers.indexOf(aNumber);
+        const bLobbyWallOrder = lobbyWallNumbers.indexOf(bNumber);
+        if (aLobbyWallOrder !== bLobbyWallOrder) {
+            if (aLobbyWallOrder === -1) return 1;
+            if (bLobbyWallOrder === -1) return -1;
+            return aLobbyWallOrder - bLobbyWallOrder;
+        }
         if (aNumber && bNumber && aNumber !== bNumber) return aNumber - bNumber;
         return a.file.localeCompare(b.file, undefined, {numeric: true});
     })
@@ -55,8 +64,11 @@ const images = require("../images/images.json").images
         const sharesMainWall = img.file === "Feliz cumpleaños Mi Lau.png" || img.file === "pastel.png";
         const imageNumber = Number((/^imagen (\d+)$/i.exec(img.title) || [])[1]);
         const mainWallIndex = mainWallNumbers.indexOf(imageNumber);
+        const lobbyWallIndex = lobbyWallNumbers.indexOf(imageNumber);
         const placementIndex = sharesMainWall ? 3 : mainWallIndex !== -1
             ? 4 + mainWallIndex
+            : lobbyWallIndex !== -1
+            ? 8 + lobbyWallIndex
             : placementStarts[room] + roomPlacementCounts[room]++;
         return {
             ...img,

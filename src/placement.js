@@ -60,17 +60,19 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         const baseWidth = (isCake ? baseHeightScale : baseScale * 1.2) * p.aspect;
         const heightScale = baseHeightScale * (isCake ? 1.4 : isBirthday ? 1.1 : isTeclasImage ? 1 : isFeaturedSideImage ? 1.2 : isRoomArtwork ? 1.65 : 1);
         const requestedWidth = baseWidth * (isCake ? 1.4 : isBirthday ? 1.65 : isRoomArtwork ? 1.35 : 1);
-        const width = Math.min(requestedWidth, segLen * 0.48);
+        const lobbyWallImage = placementIndex >= 8 && placementIndex < 18;
+        const width = Math.min(requestedWidth, segLen * (lobbyWallImage ? 0.4 : 0.48));
         const verticalCenter = isCake ? 1.85 : isBirthday ? 4.9 : isPartyImage ? 4.5 : isTeclasImage ? 2.1 : heightScale + 1.1;
         const pos = [(seg[0][0] + seg[1][0]) / 2, verticalCenter - heightScale, (seg[0][1] + seg[1][1]) / 2];
         const angle = Math.atan2(dir[1], dir[0]);
-        const horiz = Math.abs(angle % 3) < 1 ? 1 : 0;
-        const vert = 1 - horiz;
+        const horizontalWall = Math.abs(dir[0]) >= Math.abs(dir[1]);
+        const widthOnX = horizontalWall ? 1 : 0;
+        const widthOnZ = 1 - widthOnX;
         const thickness = isPartyImage ? 0.025 : 0.1;
         const scale = [
-            2 * width * horiz + thickness * vert,
+            2 * width * widthOnX + thickness * widthOnZ,
             2 * heightScale,
-            2 * width * vert + thickness * horiz];
+            2 * width * widthOnZ + thickness * widthOnX];
         const text = p.textGen(width);
         const d1 = width / segLen;
         const d2 = 0.005 / Math.hypot(norm[0], norm[1]);

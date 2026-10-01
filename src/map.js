@@ -245,7 +245,7 @@ function genGrid(segments, n, r, rooms, featuredSegments) {
 			x >= room.left && x <= room.right && z >= room.top && z <= room.bottom
 		);
 	};
-	const roomPlacementLimits = [3, 6, 14, 14, 14, 14, 14, 12];
+	const roomPlacementLimits = [3, 11, 12, 12, 14, 14, 13, 12];
 	const roomCandidates = Array.from({length: rooms.length}, () => []);
 	placements.forEach((segment, index) => {
 		const roomIndex = roomIndexOf(segment);
@@ -377,6 +377,18 @@ function genGallerySegments(r) {
 	const rightNear = [[wallRight + rightWallLength / 4, lobbySouth], [wallRight, lobbySouth]];
 	const rightFar = [[wallRight + rightWallLength / 2, lobbySouth], [wallRight + rightWallLength / 4, lobbySouth]];
 	const sideWallSegments = [leftWallSegments[0], leftWallSegments[1], rightNear, rightFar];
+	const splitLobbyWall = (start, end, count) => Array.from({length: count}, (_, index) => {
+		const t0 = index / count;
+		const t1 = (index + 1) / count;
+		return [
+			[start[0] * (1 - t0) + end[0] * t0, start[1] * (1 - t0) + end[1] * t0],
+			[start[0] * (1 - t1) + end[0] * t1, start[1] * (1 - t1) + end[1] * t1]
+		];
+	});
+	const lobbyWallSegments = [
+		...splitLobbyWall([30, lobbyNorth], [46, lobbyNorth], 3),
+		...splitLobbyWall([50, lobbyNorth], [66, lobbyNorth], 3)
+	];
 	const rooms = [
 		{name: 'Teclas', left: roomLeft, right: roomRight, top: 0, bottom: roomSouth},
 		{name: 'Lobby', left: 5 * r, right: 11 * r, top: lobbyNorth, bottom: lobbySouth},
@@ -426,7 +438,8 @@ function genGallerySegments(r) {
 			[[roomLeft, roomSouth], [roomLeft, 0]],
 			[[roomRight, 0], [roomRight, roomSouth]],
 			mainWall,
-			...sideWallSegments
+			...sideWallSegments,
+			...lobbyWallSegments
 		]
 	};
 }
