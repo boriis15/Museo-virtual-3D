@@ -3,9 +3,9 @@ const texture = require('./image');
 const mat4 = require('gl-mat4');
 const vec3 = require('gl-vec3');
 
-const renderDist = 20;
-const loadDist = 20;
-const unloadDist = 40;
+const renderDist = 12;
+const loadDist = 16;
+const unloadDist = 18;
 const fovxMargin = Math.PI/32;
 
 const dynamicResPeriod = 3000;
@@ -51,10 +51,17 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         const baseScale = Math.min(4.5 / (3 + p.aspect), segLen / p.aspect / 2.2, 2 / 1.2);
         const partyFiles = ["Feliz cumpleaños Mi Lau.png", "pastel.png"];
         const isPartyImage = partyFiles.includes(p.file);
+        const isBirthday = p.file === "Feliz cumpleaños Mi Lau.png";
         const isCake = p.file === "pastel.png";
-        const heightScale = baseScale * (isCake ? 0.9 : placementIndex < 3 ? 1.2 : 1);
-        const width = isCake ? heightScale * p.aspect : baseScale * 1.2 * p.aspect;
-        const verticalCenter = isCake ? 2.05 : isPartyImage ? 4.5 : 2.1;
+        const isTeclasImage = ["teclas (1).jpg", "Teclas 2.png", "Mapa.png"].includes(p.file);
+        const isFeaturedSideImage = ["56.jpeg", "57.jpeg", "85.jpeg", "87.jpeg"].includes(p.file);
+        const isRoomArtwork = placementIndex >= 8;
+        const baseHeightScale = baseScale * (isCake ? 0.9 : placementIndex < 3 ? 1.2 : 1);
+        const baseWidth = (isCake ? baseHeightScale : baseScale * 1.2) * p.aspect;
+        const heightScale = baseHeightScale * (isCake ? 1.4 : isBirthday ? 1.1 : isTeclasImage ? 1 : isFeaturedSideImage ? 1.2 : isRoomArtwork ? 1.65 : 1);
+        const requestedWidth = baseWidth * (isCake ? 1.4 : isBirthday ? 1.65 : isRoomArtwork ? 1.35 : 1);
+        const width = Math.min(requestedWidth, segLen * 0.48);
+        const verticalCenter = isCake ? 1.85 : isBirthday ? 4.9 : isPartyImage ? 4.5 : isTeclasImage ? 2.1 : heightScale + 1.1;
         const pos = [(seg[0][0] + seg[1][0]) / 2, verticalCenter - heightScale, (seg[0][1] + seg[1][1]) / 2];
         const angle = Math.atan2(dir[1], dir[0]);
         const horiz = Math.abs(angle % 3) < 1 ? 1 : 0;
@@ -81,13 +88,22 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         mat4.scale(model, model, scale);
         mat4.rotateY(model, model, -angle);
         const textmodel = [];
-        mat4.fromTranslation(textmodel, [pos[0], 1.7 - heightScale, pos[2]]);
-        mat4.scale(textmodel, textmodel, [2,2,2]);
-        mat4.rotateY(textmodel, textmodel, -angle);
+        mat4.fromTranslation(textmodel, [pos[0], Math.max(0.75, 1.7 - heightScale), pos[2]]);
         batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen:null });
     };
+
+    const fetchPaintings = (count, onComplete) => {
+        const loadedPaintings = [];
+        texture.fetch(regl, count, dynamicRes, painting => loadedPaintings.push(painting), () => {
+            loadedPaintings
+                .sort((a, b) => a.placementIndex - b.placementIndex)
+                .forEach(loadPainting);
+            onComplete();
+        });
+    };
+
     // Fetch the first textures
-    texture.fetch(regl, 20, dynamicRes, loadPainting, () => fetching = false);
+    fetchPaintings(20, () => fetching = false);
     return {
         hitTest: (x, y, viewProjection) => {
             let nearestDepth = Infinity;
@@ -125,8 +141,8 @@ module.exports = (regl, {placements, getAreaIndex}) => {
             // Fetch new textures
             if (index <= batch.length - loadDist) return;
             if (!fetching) {
-                texture.fetch(regl, 10, dynamicRes, loadPainting, () => fetching = false);
                 fetching = true;
+                fetchPaintings(5, () => fetching = false);
             }
             // Update dynamic resolution
             dynamicRes = "low";

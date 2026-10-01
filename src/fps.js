@@ -204,6 +204,11 @@ module.exports = function ({getGridSegments, getGridParts}, fovY) {
 
 	// Keyboard input
 	var keys = {};
+	const clearMovement = () => {
+		keys = {};
+		dir = [0, 0, 0];
+		run = false;
+	};
 	const handleKey = (e) => {
 		if (e.defaultPrevented || e.ctrlKey || e.altKey || e.metaKey) return;
 		keys[e.code] = e.type === 'keydown';
@@ -217,6 +222,10 @@ module.exports = function ({getGridSegments, getGridParts}, fovY) {
 	};
 	window.addEventListener('keydown', handleKey);
 	window.addEventListener('keyup', handleKey);
+	window.addEventListener('blur', clearMovement);
+	document.addEventListener('visibilitychange', () => {
+		if (document.hidden) clearMovement();
+	});
 
 	// First person scope
 	var lastTime = 0;
